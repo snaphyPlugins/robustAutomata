@@ -228,20 +228,13 @@ angular.module($snaphy.getModuleName())
         /**
          * For resetting all filter on reset button click..
          */
-        $scope.resetAll = function(tableId) {
-            //Removing the # tag from id if placed. to avoid duplicity of #
-            tableId = tableId.replace(/^\#/, '');
-            tableId = '#' + tableId;
+        $scope.resetAll = function() {
             for (var i = 0; i < resetFilterList.length; i++) {
                 //Now call each method..
                 resetFilterList[i]();
             }
-
-            //Now redraw the table..
-            //Getting the instance of the table..
-            var table = $(tableId).DataTable();
-            //Now redraw the tables..
-            table.draw();
+            $scope.resetTable();
+            //$scope.refreshData();
         };
 
 
@@ -605,12 +598,15 @@ angular.module($snaphy.getModuleName())
             Resource.getSchema(databaseName, function(schema) {
                 //Populate the schema..
                 $scope.schema = schema;
-                Resource.getPage(start, number, tableState, databaseName, schema).then(function(result) {
+                $scope.filterObj = $scope.filterObj || {};
+
+                Resource.getPage(start, number, tableState, databaseName, schema, $scope.filterObj).then(function(result) {
                     $scope.displayed = result.data;
                     tableState.pagination.numberOfPages = result.numberOfPages; //set the number of pages so the pagination can update
                     $scope.pagesReturned = result.numberOfPages;
                     $scope.totalResults = result.count;
                     $scope.isLoading = false;
+                    dataFetched = true;
                     if (tablePanelId) {
                         $timeout(function() {
                             //Now hide remove the refresh widget..
@@ -636,6 +632,12 @@ angular.module($snaphy.getModuleName())
                     break;
                 }
             }
+        };
+
+        $scope.resetTable = function(){
+            //reset the table filters
+            $scope.filterObj.where = {};
+            $scope.refreshData();
         };
 
 

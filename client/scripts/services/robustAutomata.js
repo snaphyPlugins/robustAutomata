@@ -157,11 +157,11 @@ angular.module($snaphy.getModuleName())
 
 
         //{where: {or: [{title: 'My Post'}, {content: 'Hello'}]}}
-        var getPage = function(start, number, params, database) {
+        var getPage = function(start, number, params, database, schema,  filterObj) {
             var dbService = Database.loadDb(database);
             var object = {};
-            var filter = {};
-            var where = {};
+            var filter = filterObj || {};
+            var where = filterObj.where || {};
             //where.or = []
             //Prepare filter..
             var skip = start;
@@ -245,7 +245,7 @@ angular.module($snaphy.getModuleName())
             filter.where = where;
             object.filter = filter;
 
-            //console.log(object);
+            console.log(object);
 
 
             //predicateObject
@@ -274,7 +274,7 @@ angular.module($snaphy.getModuleName())
                                     found = false;
                                 }
                             }); //END loop
-                            
+
                             //TODO COUNT IN CASE OF RELATED MODE DATA FILTER NOT IMPLEMENTED..
 
                             //Only add element if data is found..
