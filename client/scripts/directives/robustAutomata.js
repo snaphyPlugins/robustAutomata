@@ -224,3 +224,158 @@ angular.module($snaphy.getModuleName())
                     } //link function..
             }; //return
         }]) //filterDate directive
+
+
+
+
+        /**
+         *Directive for defining filters $multiSelect
+         * */
+        .directive('robustFilterMultiSelect', ['$http', function($http) {
+                //TODO table header data initialization bugs.. this filter must not proceed before table header initialization..
+                return {
+                    restrict: 'E',
+                    scope: {
+                        "modelSettings": "=modelSettings",
+                        "columnName": "@columnName",
+                        "label": "@label",
+                        "data": "=data",
+                        "getOptions": "@get",
+                        "staticOptions": "@options",
+                        "dataType": "=dataType",
+                        "filterOptions": "=filterOptions"
+                    },
+                    replace: true,
+                    template: '<div class="form-group">' +
+                        '<label class="col-md-4 control-label" for="example-select2">{{label}}</label>' +
+                        '<div class="col-md-8">' +
+                        '<select data-allow-clear="true" class="js-select2 form-control" ng-model="data.value" style="width: 100%;" data-placeholder="Choose many.." multiple>' +
+                        '<option ng-repeat="option in data.options | unique:\'id\'" value="{{option.name}}">{{option.name}}</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>',
+                    link: function(scope, iElement, iAttrs) {
+
+                            scope.data = {};
+
+                            //Now applying date change event of the table..
+                            $($(iElement).find('.js-select2')).change(function() {
+                                //only draw if value is legitimate..
+                                if (scope.data.value) {
+                                    if (scope.data.value.length) {
+                                        scope.$parent.where = scope.$parent.where || {};
+                                        scope.$parent.where[scope.columnName] = scope.$parent.where[scope.columnName] || {};
+                                        scope.$parent.where[scope.columnName].inq = scope.data.value;
+
+                                        //Now redraw the table...
+                                        scope.$parent.refreshData();
+                                    } else {
+                                        scope.data.value = null;
+                                        if(scope.$parent.where[scope.columnName]){
+                                            if(scope.$parent.where[scope.columnName].inq){
+                                                delete scope.$parent.where[scope.columnName].inq;
+                                                //Now redraw the table...
+                                                scope.$parent.refreshData();
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+
+                            if (scope.staticOptions) {
+                                if (scope.staticOptions.length) {
+
+                                    //Load static options..
+                                    scope.data.options = JSON.parse(scope.staticOptions);
+                                }
+                                //scope.data.options = scope.staticOptions;
+                            }
+
+
+                            //Now load options..
+                            if (scope.getOptions) {
+                                $http({
+                                    method: 'GET',
+                                    url: scope.getOptions
+                                }).then(function successCallback(response) {
+                                    //Select options downloaded successfully..
+                                    //Loading options..
+                                    response.forEach(function(element, index) {
+                                        scope.data.options.push(element);
+                                    });
+
+                                }, function errorCallback(response) {
+                                    // called asynchronously if an error occurs
+                                    // or server returns response with an error status.
+                                    console.error(response);
+                                });
+                            }
+/*
+                            //If data is to be fetched from some table column.
+                            if (scope.filterOptions.getOptionsFromColumn) {
+                                var relatedColumnName;
+                                //If the column is a key name from a related model.
+                                var isRelationModel;
+
+
+                                //ForEach loop for each table object..
+                                scope.tableData.forEach(function(rowObject, index) {
+                                    var rowKey = scope.$parent.getKey(rowObject, scope.columnName);
+
+                                    if (rowObject[rowKey] === undefined) {
+                                        isRelationModel = true;
+                                    } else {
+                                        isRelationModel = false;
+                                    }
+
+                                    //options format will be {id:1, name: foo}
+                                    var rowValue = rowObject[rowKey];
+
+                                    //The the column is a related column..
+                                    if (isRelationModel) {
+                                        relatedColumnName = scope.$parent.getColumnKey(scope.columnName);
+                                        rowValue = rowObject[relatedColumnName];
+                                    }
+
+                                    var searchProp;
+                                    //If the column is of object type
+                                    var dataType = scope.filterOptions.dataType;
+                                    if(dataType){
+                                        if(dataType.type === "object"){
+                                            searchProp = dataType.searchProp;
+                                            rowValue = rowValue[searchProp];
+                                        }
+                                    }
+
+
+                                    if(rowValue === undefined){
+                                        return true;
+                                    }
+
+                                    //Now prepare the object..
+                                    var option = {
+                                        id: rowObject.id,
+                                        name: rowValue
+                                    };
+                                    if(rowValue){
+                                        scope.data.options = scope.data.options || [];
+                                        //Now push the options to populate finally...
+                                        scope.data.options.push(option);
+                                    }
+                                });
+                            } //if*/
+
+                            //Now add a Reset method to the filter..
+                            scope.$parent.addResetMethod(function() {
+                                scope.data.value = null;
+                                //Now reinitialize the
+                                setTimeout(function() {
+                                    $($(iElement).find('select')).select2();
+                                }, 0);
+                            });
+
+
+                        } //link function..
+                }; //return
+            }]) //filterDate directive

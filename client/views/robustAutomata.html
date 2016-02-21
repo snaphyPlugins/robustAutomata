@@ -93,19 +93,17 @@
                                 class="col-lg-6 col-sm-6">
 
                         </robust-filter-select>
-                        <filter-multi-select
+                        <robust-filter-multi-select
                                 options="{{filter.options}}"
                                 model-settings="schema"
-                                table-data="dataValues"
                                 filter-options="filter"
-                                table-id="automataTable"
                                 column-name="{{columnName}}"
                                 get="{{filter.get}}"
                                 label="{{filter.label}}"
                                 ng-if="filter.type==='$multiSelect'"
                                 class="col-lg-6 col-sm-6">
 
-                        </filter-multi-select>
+                        </robust-filter-multi-select>
 
                         <filter-array-objects
                                 options="{{filter.options}}"
