@@ -106,7 +106,8 @@ angular.module($snaphy.getModuleName())
                 ]
 
              */
-            filterObj.include = filterObj.include || [];
+            //Clear the include filter first..
+            filterObj.include = [];
             if (dataSchema.relations.belongsTo) {
                 if (dataSchema.relations.belongsTo.length) {
                     dataSchema.relations.belongsTo.forEach(function(relationName) {
@@ -157,11 +158,17 @@ angular.module($snaphy.getModuleName())
 
 
         //{where: {or: [{title: 'My Post'}, {content: 'Hello'}]}}
-        var getPage = function(start, number, params, database, schema,  filterObj) {
+        var getPage = function(start, number, params, database, schema,  whereFilter) {
             var dbService = Database.loadDb(database);
             var object = {};
-            var filter = filterObj || {};
-            var where = filterObj.where || {};
+            var filter = {};
+            var where = {};
+            //Now just add new where properties..
+            for(var key in whereFilter){
+                if(whereFilter.hasOwnProperty(key)){
+                    where[key] = whereFilter[key];
+                }
+            }
             //where.or = []
             //Prepare filter..
             var skip = start;

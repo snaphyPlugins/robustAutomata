@@ -68,11 +68,11 @@ angular.module($snaphy.getModuleName())
                         var from = $(valuesList[0]).val();
                         var to = $(valuesList[1]).val();
                         //Add this value to scope..
-                        scope.$parent.filterObj = scope.$parent.filterObj || {};
-                        scope.$parent.filterObj.where = scope.$parent.filterObj.where || {};
+                        //scope.$parent.filterObj = scope.$parent.filterObj || {};
+                        scope.$parent.where = scope.$parent.where || {};
                         //scope.$parent.filterObj.where[scope.columnName] = scope.$parent.filterObj.where[scope.columnName]  || {};
                         //TODO REMOVE THE DIRECT CLEAR OF AND METHOD AND FIND SOME ALTERNATE SOLUTION..
-                        scope.$parent.filterObj.where.and = [];
+                        scope.$parent.where.and = [];
                         //{"where": {and: [{"epoch_time": {"gte":1450717674}},{"epoch_time": {"lte":1459407675}}]} }
                         //Now push value to the  table..
                         //first clear previous data..
@@ -83,7 +83,7 @@ angular.module($snaphy.getModuleName())
                             fromDate[scope.columnName] = {
                                 "gte": new Date(from)
                             };
-                            scope.$parent.filterObj.where.and.push(fromDate);
+                            scope.$parent.where.and.push(fromDate);
                             //prevFrom = from;
                         }
 
@@ -92,7 +92,7 @@ angular.module($snaphy.getModuleName())
                             toDate[scope.columnName] = {
                                 "lte": new Date(to)
                             };
-                            scope.$parent.filterObj.where.and.push(toDate);
+                            scope.$parent.where.and.push(toDate);
                             //prevTo = to;
                         }
 
@@ -106,12 +106,12 @@ angular.module($snaphy.getModuleName())
                     //Clear previous value of column data..
                     var clear = function(column) {
                         var delIndex = []
-                        scope.$parent.filterObj.where.and.forEach(function(and, index) {
+                        scope.$parent.where.and.forEach(function(and, index) {
                             prepareDeleteIndex(and, column, delIndex, index);
                         });
 
                         delIndex.forEach(function(index) {
-                            scope.$parent.filterObj.where.and.splice(index, 1);
+                            scope.$parent.where.and.splice(index, 1);
                         })
                     }
 
@@ -169,10 +169,10 @@ angular.module($snaphy.getModuleName())
                         $($(iElement).find('.js-select2')).change(function() {
                             if(scope.data.value){
                                 //In this case add exact where query..
-                                scope.$parent.filterObj = scope.$parent.filterObj || {};
-                                scope.$parent.filterObj.where = scope.$parent.filterObj.where || {};
-                                scope.$parent.filterObj.where[scope.columnName] = scope.data.value;
-                                console.log(scope.$parent.filterObj.where);
+                                //scope.$parent.filterObj = scope.$parent.filterObj || {};
+                                scope.$parent.where = scope.$parent.where || {};
+                                scope.$parent.where[scope.columnName] = scope.data.value;
+                                console.log(scope.$parent.where);
                                 //Now redraw the table...
                                 scope.$parent.refreshData();
                             }
