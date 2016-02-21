@@ -159,16 +159,20 @@ angular.module($snaphy.getModuleName())
 
         //{where: {or: [{title: 'My Post'}, {content: 'Hello'}]}}
         var getPage = function(start, number, params, database, schema,  whereFilter) {
+            console.log("Printing whereFilter ", whereFilter);
             var dbService = Database.loadDb(database);
             var object = {};
             var filter = {};
             var where = {};
-            //Now just add new where properties..
-            for(var key in whereFilter){
-                if(whereFilter.hasOwnProperty(key)){
-                    where[key] = whereFilter[key];
+            if(whereFilter){
+                //Now just add new where properties..
+                for(var key in whereFilter){
+                    if(whereFilter.hasOwnProperty(key)){
+                        where[key] = whereFilter[key];
+                    }
                 }
             }
+
             //where.or = []
             //Prepare filter..
             var skip = start;

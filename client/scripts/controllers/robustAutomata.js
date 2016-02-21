@@ -635,6 +635,7 @@ angular.module($snaphy.getModuleName())
         };
 
         $scope.resetTable = function(){
+            
             //reset the table filters
             $scope.where = {};
             $scope.refreshData();
