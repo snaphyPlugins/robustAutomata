@@ -28,6 +28,7 @@ angular.module($snaphy.getModuleName())
         $scope.currentState = currentState;
         var defaultTemplate = $snaphy.loadSettings('robustAutomata', "defaultTemplate");
         $scope.databasesList = $snaphy.loadSettings('robustAutomata', "loadDatabases");
+        var ignoreList = $snaphy.loadSettings('robustAutomata', "ignore");
         //Id for tablePanel
         var tablePanelId = $snaphy.loadSettings('robustAutomata', "tablePanelId");
         $snaphy.setDefaultTemplate(defaultTemplate);
@@ -48,6 +49,9 @@ angular.module($snaphy.getModuleName())
             return new Date(str);
         };
 
+        $scope.ifRecipeState = function(){
+            return $scope.getCurrentState() === "Recipe";
+        };
 
 
         $scope.getCurrentState = function() {
@@ -59,8 +63,31 @@ angular.module($snaphy.getModuleName())
             //Scroll
             $timeout(function(){
                 App.layout('side_scroll_off');
-            }, 10)
-        }
+            }, 10);
+        };
+
+
+        $scope.isIgnoreState = function(state){
+            //Check if routes dont belongs in the main list
+            if(ignoreList){
+                if(ignoreList.length){
+                    var ignore = false;
+                    for(var i=0; i<ignoreList.length; i++){
+                        var ignoreState = ignoreList[i];
+                        if(ignoreState === state){
+                            ignore = true;
+                            break;
+                        }
+                    }
+                    return ignore;
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+
+        };
 
 
 
@@ -100,6 +127,39 @@ angular.module($snaphy.getModuleName())
             var val = $scope.getColValue(rowObject, columnHeader);
             var date = new Date(val);
             return date.getTime();
+        };
+
+
+        //Method for getting branch.io key..details..
+        $scope.getBranchIOKey = function(model){
+            //console.log(model);
+            var imageUrl;
+            if(model.mainImage){
+                if(model.mainImage.url){
+                    if(model.mainImage.url.unSignedUrl){
+                        imageUrl = model.mainImage.url.unSignedUrl;
+                    }
+                }
+            }
+            var link = {};
+            link.id =  model.id;
+
+            if(imageUrl){
+                link.url = imageUrl;
+            }
+
+
+
+            $scope.info = {
+                title: "Branch.IO link generation.",
+                onCancel: function() {
+                    /*Do nothing..*/
+                    //Reset the disloag bar..
+                    $scope.info.show = false;
+                },
+                show: true,
+                link: link
+            };
         };
 
 
@@ -249,7 +309,7 @@ angular.module($snaphy.getModuleName())
             }
 
             return null;
-        }
+        };
 
         //Example addInlineFilterResetMethod('#automataTable', 'number', inlineSearch, header)
         $scope.addInlineFilterResetMethod = function(tableId, type, modelObj, columnName){
@@ -852,7 +912,7 @@ angular.module($snaphy.getModuleName())
                     });
                 });
             }
-        }
+        };
 
         $scope.refreshData = function(tableState, ctrl) {
             for (var i = 0; i < $scope.databasesList.length; i++) {
