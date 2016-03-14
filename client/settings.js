@@ -26,11 +26,16 @@ var settings = {
        "Chef",
        //"Popularity",
        /*'OrderDetail',*/
-       "Course"
+       "Course",
+       "ContactChef"
    ],
     "ignore":[
         "Order"
-    ]
+    ],
+    "failedSaveStatus":[{
+        "code":420,
+        "message":"Your recipe upload limit for current chef is expired. Please renew it."
+    }]
 
 };
 
