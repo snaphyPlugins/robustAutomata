@@ -160,7 +160,7 @@ angular.module($snaphy.getModuleName())
 
         //{where: {or: [{title: 'My Post'}, {content: 'Hello'}]}}
         var getPage = function(start, number, params, database, schema,  whereFilter) {
-            console.log("Printing whereFilter ", whereFilter);
+            //console.log("Printing whereFilter ", whereFilter);
             var dbService = Database.loadDb(database);
             var object = {};
             var filter = {};
@@ -257,14 +257,14 @@ angular.module($snaphy.getModuleName())
             filter.where = where;
             object.filter = filter;
 
-            console.log(object);
+            //console.log(object);
 
 
             //predicateObject
 
             dbService.find(object, function(values, respHeader) {
                 dbService.count(filter, function(count, respHeader) {
-                     console.log(count);
+                     //console.log(count);
                     // //Value retrived..
                     // console.log(values);
                     //prepare another collection for the given element..

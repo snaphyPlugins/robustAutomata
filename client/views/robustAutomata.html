@@ -244,9 +244,10 @@
                                                tableConfig = findModelPropertyTableConfig(schema.tables, colKey);"
                                     ng-repeat="header in schema.header" >
 
-                                    <span data-order="{{dateInSeconds(rowObject, header)}}"
+                                    <span   data-order="{{dateInSeconds(rowObject, header)}}"
                                             data-sort="{{dateInSeconds(rowObject, header)}}"
-                                            data-search="{{getColValue(rowObject, header)}}" 
+                                            data-search="{{dateInSeconds(rowObject, header)}}"
+                                            order-by="{{dateInSeconds(rowObject, header)}}" 
                                             ng-if="tableConfig.date">
                                             <!--Display link here..-->
                                             {{toJsDate(getColValue(rowObject, header) )| date:'MM/dd/yyyy'}}

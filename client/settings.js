@@ -35,6 +35,10 @@ var settings = {
     "failedSaveStatus":[{
         "code":420,
         "message":"Your recipe upload limit for current chef is expired. Please renew it."
+    },
+    {
+      "code":400,
+      "message":"Chek if User is an authorised chef. Or Someother error occured"
     }]
 
 };

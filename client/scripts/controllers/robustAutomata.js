@@ -68,6 +68,7 @@ angular.module($snaphy.getModuleName())
         };
 
 
+
         $scope.isIgnoreState = function(state){
             //Check if routes dont belongs in the main list
             if(ignoreList){
