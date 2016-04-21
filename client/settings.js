@@ -22,7 +22,7 @@ var settings = {
        "Ingredients",
        "RecipeIngredients",
        "RecipeTag",
-       "Wishlist",
+       /*"Wishlist",*/
        "Chef",
        //"Popularity",
        /*'OrderDetail',*/
